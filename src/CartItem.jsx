@@ -3,18 +3,30 @@ import { useSelector, useDispatch } from 'react-redux';
 import { removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
 
-const CartItem = ({ onContinueShopping }) => {
+const CartItem = ({ onContinueShopping, updateCartQuantity }) => {
   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
   // Calculate total amount for all products in the cart
-const calculateTotalAmount = () => {
-  return cart.reduce((total, item) => {
-    const numericCost = parseFloat(item.cost.replace('$', ''));  // Remove '$' and convert to number
-    return total + item.quantity * numericCost;
-  }, 0).toFixed(2);
-};
+  const calculateTotalAmount = () => {
+    return cart.reduce((total, item) => {
+      const numericCost = parseFloat(item.cost.replace('$', ''));  // Remove '$' and convert to number
+      return total + item.quantity * numericCost;
+    }, 0).toFixed(2);
+  };
 
+  // Calculate total quantity of items in the cart
+  const calculateTotalQuantity = () => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  };
+
+  // Update the total quantity in the Navbar
+  React.useEffect(() => {
+    if (updateCartQuantity) {
+      const totalQuantity = calculateTotalQuantity();
+      updateCartQuantity(totalQuantity); // Update the parent or Navbar with the total quantity
+    }
+  }, [cart, updateCartQuantity]);
 
   // Handle "Continue Shopping" button click
   const handleContinueShopping = (e) => {
@@ -43,11 +55,10 @@ const calculateTotalAmount = () => {
   };
 
   // Calculate total cost for a single item
-const calculateTotalCost = (item) => {
-  const numericCost = parseFloat(item.cost.replace('$', ''));  // Remove '$' and convert to number
-  return (item.quantity * numericCost).toFixed(2);
-};
-
+  const calculateTotalCost = (item) => {
+    const numericCost = parseFloat(item.cost.replace('$', ''));  // Remove '$' and convert to number
+    return (item.quantity * numericCost).toFixed(2);
+  };
 
   return (
     <div className="cart-container">
@@ -81,6 +92,3 @@ const calculateTotalCost = (item) => {
 };
 
 export default CartItem;
-
-
-
