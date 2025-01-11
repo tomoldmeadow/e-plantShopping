@@ -16,8 +16,8 @@ export const CartSlice = createSlice({
       }
     },
     removeItem: (state, action) => {
-      const name = action.payload; // Extract plant name
-      state.items = state.items.filter(item => item.name !== name); // Remove plant by name
+        const itemToRemove = action.payload;  // The entire item
+        state.items = state.items.filter(item => item.name !== itemToRemove.name); // Remove item by matching name
     },
     updateQuantity: (state, action) => {
       const { name, quantity } = action.payload; // Extract name and quantity
