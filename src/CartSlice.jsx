@@ -7,29 +7,27 @@ export const CartSlice = createSlice({
   },
   reducers: {
     addItem: (state, action) => {
-      const { name, image, cost } = action.payload; // Extract plant details
-      const existingItem = state.items.find(item => item.name === name); // Check if plant exists
-      if (existingItem) {
-        existingItem.quantity++; // Increment quantity if plant exists
-      } else {
-        state.items.push({ name, image, cost, quantity: 1 }); // Add new plant
-      }
+    const {name, image, cost} = action.payload;
+    const existingItem = state.items.find(item => item.name === name);
+    if (existingItem) {
+      existingItem.quantity++;
+    } else {
+      state.items.push({name, image ,cost, quantity: 1});
+    }
     },
     removeItem: (state, action) => {
-        const itemToRemove = action.payload;  // The entire item
-        state.items = state.items.filter(item => item.name !== itemToRemove.name); // Remove item by matching name
+      state.items = state.items.filter(item => item.name !== action.payload);
     },
     updateQuantity: (state, action) => {
-      const { name, quantity } = action.payload; // Extract name and quantity
-      const existingItem = state.items.find(item => item.name === name);
-      if (existingItem) {
-        existingItem.quantity = quantity; // Update quantity if plant exists
+      const { name, quantity } = action.payload;
+      const itemToUpdate = state.items.find(item => item.name === name);
+      if (itemToUpdate) {
+        itemToUpdate.quantity = quantity;
       }
     },
   },
 });
 
 export const { addItem, removeItem, updateQuantity } = CartSlice.actions;
+
 export default CartSlice.reducer;
-
-
